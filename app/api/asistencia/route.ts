@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { estaEnAlmacen } from "@/lib/geo-utils";
+import { RADIO_MAXIMO_METROS } from "@/lib/constants";
 import type { RegistroAsistenciaPayload, ApiResponse, Asistencia, TipoAsistencia } from "@/lib/types";
 import { ETIQUETA_TIPO } from "@/lib/types";
 
