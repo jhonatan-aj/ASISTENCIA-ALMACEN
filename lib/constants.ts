@@ -5,4 +5,4 @@ export const ALMACEN_COORDS = {
 } as const;
 
 // Radio máximo permitido en metros
-export const RADIO_MAXIMO_METROS = 150;
+export const RADIO_MAXIMO_METROS = 2000;

@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json<ApiResponse<null>>(
         {
           success: false,
-          error: `No estás dentro del rango del almacén. Distancia: ${ubicacion.distancia}m (máximo: 150m)`,
+          error: `No estás dentro del rango del almacén. Distancia: ${ubicacion.distancia}m (máximo: ${RADIO_MAXIMO_METROS}m)`,
         },
         { status: 403 }
       );
