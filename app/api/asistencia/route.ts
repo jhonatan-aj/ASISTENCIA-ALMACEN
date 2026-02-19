@@ -5,20 +5,14 @@ import { RADIO_MAXIMO_METROS } from "@/lib/constants";
 import type { RegistroAsistenciaPayload, ApiResponse, Asistencia, TipoAsistencia } from "@/lib/types";
 import { ETIQUETA_TIPO } from "@/lib/types";
 
-// Orden requerido de registros
-const ORDEN_TIPOS: TipoAsistencia[] = [
+// Tipos válidos de asistencia
+const TIPOS_VALIDOS: TipoAsistencia[] = [
   "entrada",
   "salida_almuerzo",
   "entrada_almuerzo",
   "salida",
 ];
 
-const PREVIO_REQUERIDO: Record<TipoAsistencia, TipoAsistencia | null> = {
-  entrada: null,
-  salida_almuerzo: "entrada",
-  entrada_almuerzo: "salida_almuerzo",
-  salida: "entrada_almuerzo",
-};
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validar que el tipo sea válido
-    if (!ORDEN_TIPOS.includes(tipo)) {
+    if (!TIPOS_VALIDOS.includes(tipo)) {
       return NextResponse.json<ApiResponse<null>>(
         { success: false, error: "Tipo de asistencia no válido" },
         { status: 400 }
@@ -96,28 +90,6 @@ export async function POST(request: NextRequest) {
         },
         { status: 409 }
       );
-    }
-
-    // Verificar orden secuencial
-    const previo = PREVIO_REQUERIDO[tipo];
-    if (previo) {
-      const { data: registroPrevio } = await supabase
-        .from("asistencias")
-        .select("id")
-        .eq("dni", dni)
-        .eq("fecha", fechaPeru)
-        .eq("tipo", previo)
-        .single();
-
-      if (!registroPrevio) {
-        return NextResponse.json<ApiResponse<null>>(
-          {
-            success: false,
-            error: `Debes registrar "${ETIQUETA_TIPO[previo]}" primero.`,
-          },
-          { status: 400 }
-        );
-      }
     }
 
     // Registrar asistencia
